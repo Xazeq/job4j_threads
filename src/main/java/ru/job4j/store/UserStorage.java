@@ -53,7 +53,12 @@ public class UserStorage implements Storage {
         UserStorage storage = new UserStorage(new HashMap<>());
         storage.add(new User(1, 100));
         storage.add(new User(2, 200));
+        System.out.println("Before transfer " + storage.getUsers());
         storage.transfer(1, 2, 50);
-        System.out.println(storage.getUsers());
+        System.out.println("After transfer " + storage.getUsers());
+        storage.update(new User(2, 500));
+        System.out.println("After update " + storage.getUsers());
+        storage.delete(new User(2, 500));
+        System.out.println("After delete " + storage.getUsers());
     }
 }
