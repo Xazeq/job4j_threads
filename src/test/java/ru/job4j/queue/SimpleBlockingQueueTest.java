@@ -13,10 +13,22 @@ public class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(1);
         AtomicInteger result = new AtomicInteger();
         Thread offerThread = new Thread(
-                () -> queue.offer(5)
+                () -> {
+                    try {
+                        queue.offer(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
         );
         Thread pollThread = new Thread(
-                () -> result.set(queue.poll())
+                () -> {
+                    try {
+                        result.set(queue.poll());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
         );
         offerThread.start();
         pollThread.start();
@@ -31,14 +43,22 @@ public class SimpleBlockingQueueTest {
         Thread offerThread = new Thread(
                 () -> {
                     for (int i = 0; i < 10; i++) {
-                        queue.offer(i);
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }
         );
         Thread pollThread = new Thread(
                 () -> {
                     for (int i = 0; i < 10; i++) {
-                        queue.poll();
+                        try {
+                            queue.poll();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }
         );
